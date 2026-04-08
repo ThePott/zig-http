@@ -2,6 +2,14 @@ const std = @import("std");
 const zig_http = @import("zig_http");
 const Server = @import("./server/index.zig").Server;
 const request_module = @import("./request/index.zig");
+const response_module = @import("./response/index.zig");
+const Method = @import("./request/method/index.zig").Method;
+
+// TODO:
+// import response struct
+// check method is get
+// check uri is root
+// call 200 or 404
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;
@@ -17,18 +25,24 @@ pub fn main(init: std.process.Init) !void {
     try request_module.readRequest(io, connection, &request_buffer);
     std.debug.print("...request_buffer...\n{s}\n", .{request_buffer});
 
-    const request = request_module.parseRequest(&request_buffer);
+    const request = try request_module.parseRequest(&request_buffer);
     std.debug.print("{any}\n", .{request});
+
+    switch (request.method) {
+        .get => {
+            std.debug.print("this is get", .{});
+            if (std.mem.eql(u8, request.uri, "/")) {
+                std.debug.print("trying to 200\n", .{});
+                try response_module.send200(io, connection);
+            } else {
+                std.debug.print("trying to 404\n", .{});
+                try response_module.send404(io, connection);
+            }
+        },
+    }
 }
 
-// test "loop for 5 or 6 times" {
-//     for (0..5) |index| {
-//         std.debug.print("exclude 5?: {d}\n", .{index});
-//     }
-// }
-
 test "what does index of scalar return" {
-    // TODO: how do I convert string(pointer by itself) to slice?
     const sampleText = "first line\nsecond second line\nthird line";
     const line_break_index = std.mem.indexOfScalar(u8, sampleText, '\n').?;
     std.debug.print("line index: {any}\n", .{line_break_index});

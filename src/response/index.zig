@@ -15,12 +15,14 @@ const std = @import("std");
 pub fn send200(io: std.Io, connection: std.Io.net.Stream) !void {
     const content = "<html><body><h1>this is good</h1></body></html>";
     const message = ("HTTP1.1 OK" ++ "\nContent-Length: 47" ++ "\nConnection: Closed" ++ "\n" ++ "\n" ++ content);
-    const connection_writer = connection.writer(io, .{}).interface.write;
-    _ = try connection_writer(message); // TODO: usize 리턴하는데 이게 무슨 뜻인지 모르겠다
+    var connection_writer = connection.writer(io, &.{});
+    _ = try connection_writer.interface.write(message); // TODO: usize 리턴하는데 이게 무슨 뜻인지 모르겠다
+    std.debug.print("---- this is 200\n", .{});
 }
 pub fn send404(io: std.Io, connection: std.Io.net.Stream) !void {
     const content = "<html><body><h1>this is NOT FOUND</h1></body></html>";
     const message = ("HTTP1.1 Not Found" ++ "\nContent-Length: 52" ++ "\nConnection: Closed" ++ "\n" ++ "\n" ++ content);
-    const connection_writer = connection.writer(io, .{}).interface.write;
-    _ = try connection_writer(message);
+    var connection_writer = connection.writer(io, &.{});
+    _ = try connection_writer.interface.write(message); // TODO= usize 리턴하는데 이게 무슨 뜻인지 모르겠다
+    std.debug.print("---- this is 404\n", .{});
 }

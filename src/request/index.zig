@@ -1,4 +1,3 @@
-// TODO: https://pedropark99.github.io/zig-book/Chapters/04-http-server.html#using-the-parse-request-function
 const std = @import("std");
 const Method = @import("./method/index.zig").Method;
 
