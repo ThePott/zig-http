@@ -25,20 +25,20 @@ fn readLine(reader_interface: *std.Io.Reader, buffer: []u8, start_index: usize) 
 
 const Request = struct {
     method: Method,
-    uri: []u8,
-    version: []u8,
+    uri: []const u8,
+    version: []const u8,
     pub fn init(
         method: Method,
-        uri: []u8,
-        version: []u8,
+        uri: []const u8,
+        version: []const u8,
     ) Request {
         return .{ .method = method, .uri = uri, .version = version };
     }
 };
 
-pub fn parseRequest(text: []u8) !Request {
-    const line_break_index = std.mem.indexOfScalar(u8, text, '\n');
-    const iterator = std.mem.splitScalar(u8, text[0..line_break_index], ' ');
+pub fn parseRequest(request_buffer: []u8) !Request {
+    const line_break_index = std.mem.indexOfScalar(u8, request_buffer, '\n') orelse request_buffer.len;
+    var iterator = std.mem.splitScalar(u8, request_buffer[0..line_break_index], ' ');
 
     const method = try Method.init(iterator.next().?);
     const uri = iterator.next().?;

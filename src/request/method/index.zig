@@ -10,11 +10,11 @@ const StringToMethod = StaticStringMap(Method).initComptime(.{.{ "GET", Method.g
 pub const Method = enum {
     get,
 
-    pub fn init(text: []u8) !Method {
+    pub fn init(text: []const u8) !Method {
         const method = StringToMethod.get(text);
         return method.?;
     }
-    pub fn checkIsSupported(text: []u8) bool {
+    pub fn checkIsSupported(text: []const u8) bool {
         const method = StringToMethod.get(text);
         if (method) |_| {
             return true;

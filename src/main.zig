@@ -1,7 +1,7 @@
 const std = @import("std");
 const zig_http = @import("zig_http");
 const Server = @import("./server/index.zig").Server;
-const readRequest = @import("./request/index.zig").readRequest;
+const request_module = @import("./request/index.zig");
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;
@@ -14,9 +14,11 @@ pub fn main(init: std.process.Init) !void {
 
     var request_buffer: [1024]u8 = undefined;
     @memset(&request_buffer, 0);
-    try readRequest(io, connection, &request_buffer);
+    try request_module.readRequest(io, connection, &request_buffer);
+    std.debug.print("...request_buffer...\n{s}\n", .{request_buffer});
 
-    std.debug.print("{s}\n", .{request_buffer});
+    const request = request_module.parseRequest(&request_buffer);
+    std.debug.print("{any}\n", .{request});
 }
 
 // test "loop for 5 or 6 times" {
@@ -28,7 +30,7 @@ pub fn main(init: std.process.Init) !void {
 test "what does index of scalar return" {
     // TODO: how do I convert string(pointer by itself) to slice?
     const sampleText = "first line\nsecond second line\nthird line";
-    const line_break_index = std.mem.indexOfScalar(u8, sampleText, '\n');
+    const line_break_index = std.mem.indexOfScalar(u8, sampleText, '\n').?;
     std.debug.print("line index: {any}\n", .{line_break_index});
     const iterator = std.mem.splitScalar(u8, sampleText, '\n');
     std.debug.print("iterator: {any}\n", .{iterator});
