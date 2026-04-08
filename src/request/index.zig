@@ -16,7 +16,7 @@ pub fn readRequest(io: std.Io, connection: std.Io.net.Stream, buffer: []u8) !voi
 }
 
 fn readLine(reader_interface: *std.Io.Reader, buffer: []u8, start_index: usize) ![]const u8 {
-    const line = try reader_interface.takeDelimiter('\n');
-    @memcpy(buffer[start_index .. start_index + line.?.len], line.?[0..]);
-    return line.?;
+    const line = try reader_interface.takeDelimiterInclusive('\n');
+    @memcpy(buffer[start_index .. start_index + line.len], line[0..]);
+    return line;
 }
