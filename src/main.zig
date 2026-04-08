@@ -19,8 +19,17 @@ pub fn main(init: std.process.Init) !void {
     std.debug.print("{s}\n", .{request_buffer});
 }
 
-test "loop for 5 or 6 times" {
-    for (0..5) |index| {
-        std.debug.print("exclude 5?: {d}\n", .{index});
-    }
+// test "loop for 5 or 6 times" {
+//     for (0..5) |index| {
+//         std.debug.print("exclude 5?: {d}\n", .{index});
+//     }
+// }
+
+test "what does index of scalar return" {
+    // TODO: how do I convert string(pointer by itself) to slice?
+    const sampleText = "first line\nsecond second line\nthird line";
+    const line_break_index = std.mem.indexOfScalar(u8, sampleText, '\n');
+    std.debug.print("line index: {any}\n", .{line_break_index});
+    const iterator = std.mem.splitScalar(u8, sampleText, '\n');
+    std.debug.print("iterator: {any}\n", .{iterator});
 }

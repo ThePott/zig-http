@@ -4,7 +4,7 @@ const Protocol = std.Io.net.Protocol;
 
 pub const Server = struct {
     host: []const u8, // "127.0.0.1" , [4]u8을 안 쓰는 이유는 실제 ip를 만드는 Ip4Address.parseIp4 에서 받는 프로퍼티가 []const u8이어서
-    port: u16, // TODO: why not const u16?, well it is because type of property of Ip4Address.parseIp4
+    port: u16, // why not const u16?, well it is because type of property of Ip4Address.parseIp4
     address: std.Io.net.IpAddress,
     io: std.Io,
 
